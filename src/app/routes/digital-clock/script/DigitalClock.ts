@@ -1,3 +1,4 @@
+import { type } from 'os';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Position {
@@ -9,12 +10,23 @@ abstract class DigitalSvgLine {
     public pathString!: string;
     constructor(
         protected readonly lineWeight: number,
-        protected readonly lineLength: number
+        protected readonly lineLength: number,
+        opacity: number,
+        protected animationWatiTime: number,
+        protected animationDelay: number
     ) {
-        this.pathString = this.createPathString();
+        this.pathString = this.createPathString(opacity);
     }
 
-    protected abstract createPathString(): string;
+    protected abstract createPathString(opacity: number): string;
+
+    private createAnimation($path: SVGPathElement) {
+        const $animation1 = SvgElementFactory.create('animate', {
+            attributeName: "opacity",
+            dur: '0.1s',
+            beigin: 
+        })
+    }
 }
 
 // 横向的
@@ -74,10 +86,11 @@ interface DigitalSvgLines {
     "btmR": DigitalSvgLine
 }
 
+type DigitalNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6| 7 | 8 | 9;
 
 
 class DigitalSvgNumber {
-    digitalSvglinesMap: Map<keyof DigitalSvgLines, DigitalSvgLine> = new Map();
+ 
     digitalSvgLinePaths: Set<SVGPathElement> = new Set();
 
     private readonly lineWeight = 4;
@@ -92,21 +105,58 @@ class DigitalSvgNumber {
     private readonly btmL = new VerticalDigitalSvgLine({x: this.startPos.x, y: this.startPos.y + this.lineLength + 3 * this.gap}, this.lineWeight, this.lineLength);
     private readonly btmR = new VerticalDigitalSvgLine({x: this.startPos.x + this.lineLength, y: this.startPos.y + this.lineLength + 3 * this.gap}, this.lineWeight, this.lineLength);
 
-    private readonly one: (keyof DigitalSvgLines)[] = ["topR", "btmR"];
-    private readonly two: (keyof DigitalSvgLines)[] = ["topM", "topR", "midM", "btmL", "btmM"];
-    private readonly three: (keyof DigitalSvgLines)[] = ["topM", "topR", "midM", "btmR", "btmM"];
-    private readonly four: (keyof DigitalSvgLines)[] = ["topL", "midM", "topR", "btmR"];
-    private readonly five: (keyof DigitalSvgLines)[] = ["topM", "topL", "midM", ""];
-    constructor(num: number) {
-        this.createNumSvgLines();
+    private readonly allLines: Set<keyof DigitalSvgLines> = new Set(["topM", "topL", "topR", "midM", "btmL", "btmR", "btmM"]);
+    private readonly zero: Set<(keyof DigitalSvgLines)> = new Set([]);
+    private readonly one: Set<(keyof DigitalSvgLines)> = new Set(["topR", "btmR"]);
+    private readonly two: Set<(keyof DigitalSvgLines)> = new Set(["topM", "topR", "midM", "btmL", "btmM"]);
+    private readonly three: Set<(keyof DigitalSvgLines)> = new Set(["topM", "topR", "midM", "btmR", "btmM"]);
+    private readonly four: Set<(keyof DigitalSvgLines)> = new Set(["topL", "midM", "topR", "btmR"]);
+    private readonly five: Set<(keyof DigitalSvgLines)> = new Set(["topM", "topL", "midM", "btmR", "btmM"]);
+    private readonly six: Set<(keyof DigitalSvgLines)> = new Set(["topM", "topL", "midM", "btmL", "btmM", "btmR"]);
+    private readonly seven: Set<(keyof DigitalSvgLines)> = new Set(["topM", "topR", "btmR"]);
+    private readonly eight: Set<(keyof DigitalSvgLines)> = new Set(["topM", "topL", "topR", "midM", "btmL", "btmR", "btmM"]);
+    private readonly nine: Set<(keyof DigitalSvgLines)> = new Set(["topM", "topL", "topR", "midM", "btmL", "btmR", "btmM"]);
+
+    private readonly numberMap = new Map<DigitalNumber, Set<keyof DigitalSvgLines>>([
+        [0, this.zero],
+        [1, this.one],
+        [2, this.two],
+        [3, this.three],
+        [4, this.four],
+        [5, this.five],
+        [6, this.six],
+        [7, this.seven],
+        [8, this.eight],
+        [9, this.nine]
+    ]);
+
+    digitalSvglinesMap = new Map<keyof DigitalSvgLines, DigitalSvgLine>([
+        ["topL", this.topL],
+        ["topM", this.topM],
+        ["topR", this.topR],
+        ["midM", this.midM],
+        ["btmL", this.btmL],
+        ["btmR", this.btmR],
+        ["btmM", this.btmM],
+    ])
+
+    constructor(num: DigitalNumber, delay: number) {
+        this.createDigitalSvgLinePaths(num, delay);
     }
 
-    private createNumSvgLines() {
-        this.digitalSvglines = [this.topM, this.topL, this.topR, this.midM, this.btmL, this.btmR, this.btmM];
-    }
-
-    private createDigitalSvgLinePaths(num: number) {
-        this.digitalSvgLinePaths = this.digitalSvglines.forEach()
+    private createDigitalSvgLinePaths(num: DigitalNumber, delay: number) {
+        const linesSet = this.numberMap.get(num);
+        if(!linesSet) throw '请输入正确的数字'
+        for(const [key] of this.digitalSvglinesMap) {
+            if(!linesSet.has(key)) {
+                // todo setStyle
+                
+            }
+            else {
+                // todo setStyle
+            }
+            // todo setAnimation
+        }
     }
 
 
@@ -117,7 +167,7 @@ class SvgElementFactory {
     static create<K extends keyof SVGElementTagNameMap>(svgElementTagName: K, attributeOption?: { [key: string]: string}) {
         const element = document.createElementNS<K>(SvgElementFactory.svgNs, svgElementTagName); 
         if(attributeOption)
-            for(const key in attributeOption) element.setAttribute(key: attributeOption[key]);
+            for(const key in attributeOption) element.setAttribute(key, attributeOption[key]);
         return element;
     }
 }
@@ -128,7 +178,6 @@ class DigitalClockSvg {
         const svg = this.createSvg();
         const filter = this.createFilter();
         const feGaussianBlur = this.createFeGaussianBlur();
-        const 
     }
 
     private createSvg() {
