@@ -11,7 +11,7 @@ const routes: Routes = [
     { path: 'detail/:id', component: HeroDetailComponent },
     { path: "webgl", loadChildren: () => import("./routes/webgl/webgl.module").then(m => m.WebglModule)},
     { path: 'digital-clock-index', loadChildren: () => import("./routes/digital-clock/digital-clock.module").then(m => m.DigitalClockModule) },
-    { path: '', redirectTo: "digital-clock-index", pathMatch: 'full' },
+    { path: '', redirectTo: "webgl", pathMatch: 'full' },
     
 ]
 

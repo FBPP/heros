@@ -1,14 +1,9 @@
 
 export class Shader {
     public shaderProgram!: WebGLProgram | null;
-    public positionBuffer!: WebGLBuffer | null;
-    public colorBuffer!: WebGLBuffer | null;
     constructor(private gl: WebGLRenderingContext, private vs: string, private fs: string,
-            private positions: Float32Array, private colors: Float32Array
         ) {
         this.shaderProgram = this.initShaderProgram(gl, vs, fs);
-        this.positionBuffer = this.initPositionBuffer(gl, positions);
-        this.colorBuffer = this.initColorBuffer(gl, colors);
     }
 
     private initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
@@ -45,17 +40,10 @@ export class Shader {
         return shader;
     }
 
-    private initPositionBuffer(gl: WebGLRenderingContext, positions: Float32Array) {
-        const positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-        return positionBuffer;
-    }   
-
-    private initColorBuffer(gl: WebGLRenderingContext, colors: Float32Array) {
-        const colorBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
-        return colorBuffer; 
+    public createBuffer(data: BufferSource) {
+        const buffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, data, this.gl.STATIC_DRAW);
+        return buffer;
     }
 }
