@@ -46,4 +46,11 @@ export class Shader {
         this.gl.bufferData(this.gl.ARRAY_BUFFER, data, this.gl.STATIC_DRAW);
         return buffer;
     }
+
+    public createElementBuffer(data: BufferSource) {
+        const buffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, buffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, data, this.gl.STATIC_DRAW);
+        return buffer;
+    }
 }

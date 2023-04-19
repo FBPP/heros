@@ -27,8 +27,10 @@ export class StarComponent implements OnInit,  AfterViewInit{
         gl_FragColor = vColor;
     }
   `
+  private gl: WebGLRenderingContext | null = null;
+  private shader: Shader | null = null;
+  private draw: Draw | null = null;
 
-  private vertexCount = 11;
   constructor() { 
 
   }
@@ -37,9 +39,13 @@ export class StarComponent implements OnInit,  AfterViewInit{
   }
 
   ngAfterViewInit(): void {
-    this.initShader();    
+    this.shader = this.initShader();   
+    this.draw = this.initDraw();
+    this.drawStar();
   }
-  private createStar() {
+  private drawStar() {
+    if(!this.gl || !this.shader || !this.draw) return;
+    const vertexCount = 11;
     const radius = 0.7;
     const minRadius = 0.25;
     const radiation = 360 / 10 * Math.PI / 180;
@@ -47,7 +53,7 @@ export class StarComponent implements OnInit,  AfterViewInit{
     const origin = {x: -1, y: 1}
     let vertexs: number[] =  [];
     let colors: number[] = [];
-    for(let index = 0; index < this.vertexCount; ++index) {
+    for(let index = 0; index < vertexCount; ++index) {
         let x, y;
         if(index % 2 == 0) {
             x = Math.cos(radiation * index - radiationRotate ) * minRadius;
@@ -58,15 +64,37 @@ export class StarComponent implements OnInit,  AfterViewInit{
             y = Math.sin(radiation * index - radiationRotate) * radius;
         }
         vertexs.push(x + origin.x), vertexs.push(y + origin.y);
-        colors.push(1.0 / this.vertexCount * (index + 1));
+        colors.push(1.0 / vertexCount * (index + 1));
         colors.push(0);
         colors.push(0);
         colors.push(1.0);
     }
-    return {
-        vertexs,
-        colors
+    
+    const positionBuffer = this.shader.createBuffer(new Float32Array(vertexs));
+    const colorBuffer = this.shader.createBuffer(new Float32Array(colors));
+    if(positionBuffer && colorBuffer) {
+      this.draw.bindBuffer({
+        buffer: positionBuffer,
+        vertexAttribute: vertexPosition,
+        size: 2,
+        type: this.gl.FLOAT,
+        normalize: false,
+        stride: 0,
+        offset: 0
+      });                
+  
+      this.draw.bindBuffer({
+        buffer: colorBuffer,
+        vertexAttribute: vertexColor,
+        size: 4,
+        type: gl.FLOAT,
+        normalize: false,
+        stride: 0,
+        offset: 0
+      });
+      this.draw.drawArrays(gl.TRIANGLE_FAN, this.vertexCount);
     }
+
   }
 
   private createCylinder() {
@@ -87,65 +115,94 @@ export class StarComponent implements OnInit,  AfterViewInit{
       vertexs.push(x, height, z, x1, -1, z1);
     }
     vertexs.push(...bottom, ...top);
+    const pointer: number[] = [];
+    const color: number[] = [];
+    // 斜面
+    for(let i = 0; i < resolution * 2; ++i) {
+      pointer.push(i);
+      pointer.push((i + 1) % resolution * 2);
+      pointer.push((i + 2) % resolution * 2);
+      for(let i = 0; i < 3; ++i) {
+        color.push(0.0, 0.0, 1.0, 1.0);
+      }
+    }
 
+    // 底面
+    for(let i = 0; i < resolution; ++i) {
+      pointer.push((2 * i + i)  % (resolution * 2));
+      pointer.push(resolution * 2);
+      pointer.push((2 * (i + 1) + 1) % (resolution * 2));
+      for(let i = 0; i < 3; ++i) {
+        color.push(0.0, 0.0, 1.0, 1.0);
+      }
+    }
 
+    // 顶面
+    for(let i = 0; i < resolution; ++i) {
+      pointer.push((2 * i) % (resolution * 2));
+      pointer.push(resolution * 2 + 1);
+      pointer.push((2 * (i + 1)) % (resolution * 2));
+      for(let i = 0; i < 3; ++i) {
+        color.push(0.0, 0.0, 1.0, 1.0);
+      }
+    }
+
+    return {
+      vertexs,
+      pointer,
+      color,
+    }
   }
 
   private initShader() {
     const  canvas = this.canvasRef.nativeElement;
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
-    const gl = canvas.getContext("webgl");
-    if(gl) {
-        const { vertexs, colors } = this.createStar();
-        const shader = new Shader(gl, this.vsSource, this.fsSource);
-        if(shader.shaderProgram) {
-            const vertexPosition = gl.getAttribLocation(shader.shaderProgram, "aVertexPosition");
-            const vertexColor = gl.getAttribLocation(shader.shaderProgram, "aVertexColor")
-            const projectionLocation = gl.getUniformLocation(shader.shaderProgram, "uProjectionMatrix");
-            const modelViewLocation = gl.getUniformLocation(shader.shaderProgram, "uModelViewMatrix");
-            const positionBuffer = shader.createBuffer(new Float32Array(vertexs));
-            const colorBuffer = shader.createBuffer(new Float32Array(colors));
-            if(vertexPosition != null && vertexColor != null && projectionLocation && modelViewLocation && positionBuffer && colorBuffer) {
-                const shaderInfo: ShaderInfo = {
-                    shaderProgram: shader.shaderProgram,
-                    projectionLocation, 
-                    modelViewLocation,
-                }
+    this.gl = canvas.getContext("webgl");
+    if(this.gl) {
+        const shader = new Shader(this.gl, this.vsSource, this.fsSource);
+        return shader;
+    } 
+    else {
+      return null;
+    }    
+  }
 
-                const mvpInfo: MVPInfo = {
-                  aspect: canvas.width / canvas.height,
-                  fov: 45,
-                  zNear: 0.1,
-                  zFar: 100
-                };
+  private initDraw() {
+    if(!this.shader || !this.gl || !this.shader.shaderProgram) return null;
 
-                const draw = new Draw(gl, mvpInfo, shaderInfo);
-                draw.bindBuffer({
-                  buffer: positionBuffer,
-                  vertexAttribute: vertexPosition,
-                  size: 2,
-                  type: gl.FLOAT,
-                  normalize: false,
-                  stride: 0,
-                  offset: 0
-                });                
-
-                draw.bindBuffer({
-                  buffer: colorBuffer,
-                  vertexAttribute: vertexColor,
-                  size: 4,
-                  type: gl.FLOAT,
-                  normalize: false,
-                  stride: 0,
-                  offset: 0
-                });
-                draw.drawArrays(gl.TRIANGLE_FAN, this.vertexCount);
-            }
-        }
-     
+    const vertexPosition = this.gl.getAttribLocation(this.shader.shaderProgram, "aVertexPosition");
+    const vertexColor = this.gl.getAttribLocation(this.shader.shaderProgram, "aVertexColor")
+    const projectionLocation = this.gl.getUniformLocation(this.shader.shaderProgram, "uProjectionMatrix");
+    const modelViewLocation = this.gl.getUniformLocation(this.shader.shaderProgram, "uModelViewMatrix");
+    if(vertexPosition && vertexColor && projectionLocation && modelViewLocation) {
+      const shaderInfo: ShaderInfo = {
+        shaderProgram: this.shader.shaderProgram,
+        projectionLocation, 
+        modelViewLocation,
+      }
+      const canvas = this.canvasRef.nativeElement
+      const mvpInfo: MVPInfo = {
+        aspect: canvas.width / canvas.height,
+        fov: 45,
+        zNear: 0.1,
+        zFar: 100
+      };
+      const draw = new Draw(this.gl, mvpInfo, shaderInfo);
+      return draw;
     }
+    else return null;
+
+
  
+  }
+
+  private drawStar() {
+    
+  }
+
+  private drawCylinder() {
+
   }
 
 
