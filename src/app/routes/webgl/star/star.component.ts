@@ -102,14 +102,14 @@ export class StarComponent implements OnInit,  AfterViewInit{
 
   private drawCylinder() {
     if(!this.shader || !this.draw) return; 
-    const height = 20;
+    const height = 1;
     const top = [0, height, 0];
     const resolution = 50;
     const bottom = [0, -1, 0];
-    const theta = 360 / resolution * Math.PI / 180;
+    const theta = 2 * Math.PI / resolution;
     const vertexs: number[] = [];
-    const radiusB = 5;
-    const radiusT = 5;
+    const radiusB = 1;
+    const radiusT = 1;
     for(let index = 0; index < resolution; ++index) {
       const x = Math.cos(theta * index) * radiusT;
       const z = Math.sin(theta * index) * radiusT;
@@ -124,19 +124,19 @@ export class StarComponent implements OnInit,  AfterViewInit{
     // 斜面
     for(let i = 0; i < resolution * 2; ++i) {
       pointer.push(i);
-      pointer.push((i + 1) % resolution * 2);
-      pointer.push((i + 2) % resolution * 2);
-      for(let i = 0; i < 3; ++i) {
-        color.push(0.0, 0.0, 1.0, 1.0);
+      pointer.push((i + 1) % (resolution * 2));
+      pointer.push((i + 2) % (resolution * 2));
+      for(let i = 0; i < 2; ++i) {
+        color.push(0.0, 1.0, 0.0, 1.0);
       }
     }
 
     // 底面
     for(let i = 0; i < resolution; ++i) {
-      pointer.push((2 * i + i)  % (resolution * 2));
+      pointer.push((2 * i + 1)  % (resolution * 2));
       pointer.push(resolution * 2);
       pointer.push((2 * (i + 1) + 1) % (resolution * 2));
-      for(let i = 0; i < 3; ++i) {
+      for(let i = 0; i < 2; ++i) {
         color.push(0.0, 0.0, 1.0, 1.0);
       }
     }
@@ -146,8 +146,8 @@ export class StarComponent implements OnInit,  AfterViewInit{
       pointer.push((2 * i) % (resolution * 2));
       pointer.push(resolution * 2 + 1);
       pointer.push((2 * (i + 1)) % (resolution * 2));
-      for(let i = 0; i < 3; ++i) {
-        color.push(0.0, 0.0, 1.0, 1.0);
+      for(let i = 0; i < 2; ++i) {
+        color.push(1.0, 0.0, 0.0, 1.0);
       }
     }
 

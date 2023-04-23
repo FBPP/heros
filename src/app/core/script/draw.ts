@@ -55,7 +55,7 @@ export class Draw {
         mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
 
         const modelViewMatrix = mat4.create();
-        mat4.translate(modelViewMatrix, modelViewMatrix, [-0.0, 0.0, -6.0])
+        mat4.translate(modelViewMatrix, modelViewMatrix, [-0.0, 0.0, -10.0])
 
 
         this.gl.uniformMatrix4fv(shaderInfo.projectionLocation, false, projectionMatrix)
