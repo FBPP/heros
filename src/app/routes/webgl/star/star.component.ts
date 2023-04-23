@@ -30,6 +30,8 @@ export class StarComponent implements OnInit,  AfterViewInit{
   private gl: WebGLRenderingContext | null = null;
   private shader: Shader | null = null;
   private draw: Draw | null = null;
+  private vertexPositionLocation: number | null = null;
+  private vertexColorLocation: number | null = null;
 
   constructor() { 
 
@@ -42,9 +44,10 @@ export class StarComponent implements OnInit,  AfterViewInit{
     this.shader = this.initShader();   
     this.draw = this.initDraw();
     this.drawStar();
+    this.drawCylinder()
   }
   private drawStar() {
-    if(!this.gl || !this.shader || !this.draw) return;
+    if(!this.gl || !this.shader || !this.draw || this.vertexPositionLocation === null || this.vertexColorLocation === null) return;
     const vertexCount = 11;
     const radius = 0.7;
     const minRadius = 0.25;
@@ -73,9 +76,9 @@ export class StarComponent implements OnInit,  AfterViewInit{
     const positionBuffer = this.shader.createBuffer(new Float32Array(vertexs));
     const colorBuffer = this.shader.createBuffer(new Float32Array(colors));
     if(positionBuffer && colorBuffer) {
-      this.draw.bindBuffer({
-        buffer: positionBuffer,
-        vertexAttribute: vertexPosition,
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
+      this.draw.vertexAttribPointer({
+        vertexAttribute: this.vertexPositionLocation,
         size: 2,
         type: this.gl.FLOAT,
         normalize: false,
@@ -83,21 +86,22 @@ export class StarComponent implements OnInit,  AfterViewInit{
         offset: 0
       });                
   
-      this.draw.bindBuffer({
-        buffer: colorBuffer,
-        vertexAttribute: vertexColor,
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
+      this.draw.vertexAttribPointer({
+        vertexAttribute: this.vertexColorLocation,
         size: 4,
-        type: gl.FLOAT,
+        type: this.gl.FLOAT,
         normalize: false,
         stride: 0,
         offset: 0
       });
-      this.draw.drawArrays(gl.TRIANGLE_FAN, this.vertexCount);
+      this.draw.drawArrays(this.gl.TRIANGLE_FAN, vertexCount);
     }
 
   }
 
-  private createCylinder() {
+  private drawCylinder() {
+    if(!this.shader || !this.draw) return; 
     const height = 20;
     const top = [0, height, 0];
     const resolution = 50;
@@ -147,10 +151,33 @@ export class StarComponent implements OnInit,  AfterViewInit{
       }
     }
 
-    return {
-      vertexs,
-      pointer,
-      color,
+    const positionBuffer = this.shader.createBuffer(new Float32Array(vertexs));
+    const colorBuffer = this.shader.createBuffer(new Float32Array(color));
+    const pointerBuffer = this.shader.createElementBuffer(new Uint16Array(pointer));
+
+    if(this.gl && positionBuffer && colorBuffer &&  this.vertexPositionLocation !== null && this.vertexColorLocation != null) {
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
+      this.draw.vertexAttribPointer({
+        vertexAttribute: this.vertexPositionLocation,
+        size: 3,
+        type: this.gl.FLOAT,
+        normalize: false,
+        stride: 0,
+        offset: 0
+      });                
+
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
+      this.draw.vertexAttribPointer({
+        vertexAttribute: this.vertexColorLocation,
+        size: 4,
+        type: this.gl.FLOAT,
+        normalize: false,
+        stride: 0,
+        offset: 0
+      });
+
+      this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, pointerBuffer);
+      this.draw.drawElements(this.gl.TRIANGLES, pointer.length, this.gl.UNSIGNED_SHORT, 0);
     }
   }
 
@@ -171,11 +198,11 @@ export class StarComponent implements OnInit,  AfterViewInit{
   private initDraw() {
     if(!this.shader || !this.gl || !this.shader.shaderProgram) return null;
 
-    const vertexPosition = this.gl.getAttribLocation(this.shader.shaderProgram, "aVertexPosition");
-    const vertexColor = this.gl.getAttribLocation(this.shader.shaderProgram, "aVertexColor")
+    this.vertexPositionLocation = this.gl.getAttribLocation(this.shader.shaderProgram, "aVertexPosition");
+    this.vertexColorLocation = this.gl.getAttribLocation(this.shader.shaderProgram, "aVertexColor")
     const projectionLocation = this.gl.getUniformLocation(this.shader.shaderProgram, "uProjectionMatrix");
     const modelViewLocation = this.gl.getUniformLocation(this.shader.shaderProgram, "uModelViewMatrix");
-    if(vertexPosition && vertexColor && projectionLocation && modelViewLocation) {
+    if(projectionLocation && modelViewLocation) {
       const shaderInfo: ShaderInfo = {
         shaderProgram: this.shader.shaderProgram,
         projectionLocation, 
@@ -191,18 +218,7 @@ export class StarComponent implements OnInit,  AfterViewInit{
       const draw = new Draw(this.gl, mvpInfo, shaderInfo);
       return draw;
     }
-    else return null;
-
-
- 
-  }
-
-  private drawStar() {
-    
-  }
-
-  private drawCylinder() {
-
+    else return null; 
   }
 
 

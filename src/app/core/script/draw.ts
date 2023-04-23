@@ -14,8 +14,7 @@ export interface ShaderInfo {
     modelViewLocation: WebGLUniformLocation; 
 }
 
-export interface BufferInfo {
-    buffer: WebGLBuffer;
+export interface VertexInfo {
     vertexAttribute: number;
     size: number;
     type: number;
@@ -63,22 +62,24 @@ export class Draw {
         this.gl.uniformMatrix4fv(shaderInfo.modelViewLocation, false, modelViewMatrix);
     }
 
-    public bindBuffer(bufferInfo: BufferInfo) {
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, bufferInfo.buffer);
+    public vertexAttribPointer(attributeInfo: VertexInfo) {
         this.gl.vertexAttribPointer(
-            bufferInfo.vertexAttribute,
-            bufferInfo.size,
-            bufferInfo.type,
-            bufferInfo.normalize,
-            bufferInfo.stride,
-            bufferInfo.offset
+            attributeInfo.vertexAttribute,
+            attributeInfo.size,
+            attributeInfo.type,
+            attributeInfo.normalize,
+            attributeInfo.stride,
+            attributeInfo.offset
         );
 
-        this.gl.enableVertexAttribArray(bufferInfo.vertexAttribute);
+        this.gl.enableVertexAttribArray(attributeInfo.vertexAttribute);
     }
 
     public drawArrays(drawArrayMode: number, vertexCount: number) {
         this.gl.drawArrays(drawArrayMode, 0, vertexCount);
     }
 
+    public drawElements(drawElementMode: number, vertexCount: number, type: number, offset: number) {
+        this.gl.drawElements(drawElementMode, vertexCount, type, offset);
+    }
 }
