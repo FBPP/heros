@@ -1,7 +1,7 @@
 
 export class Shader {
     public shaderProgram!: WebGLProgram | null;
-    constructor(private gl: WebGLRenderingContext, private vs: string, private fs: string,
+    constructor(public gl: WebGLRenderingContext, private vs: string, private fs: string,
         ) {
         this.shaderProgram = this.initShaderProgram(gl, vs, fs);
     }

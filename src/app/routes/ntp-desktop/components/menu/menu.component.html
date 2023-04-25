@@ -1,0 +1,8 @@
+<button class="menu-btn" [class.active]="menuBtnActive" (click)="handleMenuBtnClick()">
+  <span class="dot"></span>
+  <span class="circle"></span>
+</button>
+<div class="menu-list" #menuListDom>
+  <a class="menu-item" href="#" *ngFor="let menu of menuList">{{ menu.title }}</a>
+</div>
+<div class="straight-line" #straightLineDom></div>

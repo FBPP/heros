@@ -1,6 +1,9 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Draw, MVPInfo, ShaderInfo } from 'src/app/core/script/draw';
+import { Animation, Renderer } from 'src/app/core/script/animation';
+import { Drawer, ProjectionInfo, ShaderInfo } from 'src/app/core/script/drawer';
 import { Shader } from 'src/app/core/script/Shader';
+import { CylinderRenderer } from '../script/CylinderRenderer';
+import { Cylinder } from '../script/Cylinder';
 
 @Component({
   selector: 'app-star',
@@ -27,9 +30,8 @@ export class StarComponent implements OnInit,  AfterViewInit{
         gl_FragColor = vColor;
     }
   `
-  private gl: WebGLRenderingContext | null = null;
   private shader: Shader | null = null;
-  private draw: Draw | null = null;
+  private drawer: Drawer | null = null;
   private vertexPositionLocation: number | null = null;
   private vertexColorLocation: number | null = null;
 
@@ -42,12 +44,14 @@ export class StarComponent implements OnInit,  AfterViewInit{
 
   ngAfterViewInit(): void {
     this.shader = this.initShader();   
-    this.draw = this.initDraw();
-    this.drawStar();
+    this.initLocation()
+    this.initDraw()
+    this.drawer = this.initDraw();
+    // this.drawStar();
     this.drawCylinder()
   }
   private drawStar() {
-    if(!this.gl || !this.shader || !this.draw || this.vertexPositionLocation === null || this.vertexColorLocation === null) return;
+    if(!this.shader || !this.drawer || this.vertexPositionLocation === null || this.vertexColorLocation === null) return;
     const vertexCount = 11;
     const radius = 0.7;
     const minRadius = 0.25;
@@ -76,119 +80,43 @@ export class StarComponent implements OnInit,  AfterViewInit{
     const positionBuffer = this.shader.createBuffer(new Float32Array(vertexs));
     const colorBuffer = this.shader.createBuffer(new Float32Array(colors));
     if(positionBuffer && colorBuffer) {
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
-      this.draw.vertexAttribPointer({
+      this.shader.gl.bindBuffer(this.shader.gl.ARRAY_BUFFER, positionBuffer);
+      this.drawer.vertexAttribPointer({
         vertexAttribute: this.vertexPositionLocation,
         size: 2,
-        type: this.gl.FLOAT,
+        type: this.shader.gl.FLOAT,
         normalize: false,
         stride: 0,
         offset: 0
       });                
   
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
-      this.draw.vertexAttribPointer({
+      this.shader.gl.bindBuffer(this.shader.gl.ARRAY_BUFFER, colorBuffer);
+      this.drawer.vertexAttribPointer({
         vertexAttribute: this.vertexColorLocation,
         size: 4,
-        type: this.gl.FLOAT,
+        type: this.shader.gl.FLOAT,
         normalize: false,
         stride: 0,
         offset: 0
       });
-      this.draw.drawArrays(this.gl.TRIANGLE_FAN, vertexCount);
+      this.drawer.drawArrays(this.shader.gl.TRIANGLE_FAN, vertexCount);
     }
-
   }
 
   private drawCylinder() {
-    if(!this.shader || !this.draw) return; 
-    const height = -1;
-    const top = [0, height, 0];
-    const resolution = 50;
-    const bottom = [0, -2, 0];
-    const theta = 2 * Math.PI / resolution;
-    const vertexs: number[] = [];
-    const radiusB = 1;
-    const radiusT = 1;
-    for(let index = 0; index < resolution; ++index) {
-      const x = Math.cos(theta * index) * radiusT;
-      const z = Math.sin(theta * index) * radiusT;
-
-      const x1 = Math.cos(theta * index) * radiusB;
-      const z1 = Math.sin(theta * index) * radiusB;
-      vertexs.push(x, height, z, x1, -1, z1);
-    }
-    vertexs.push(...bottom, ...top);
-    const pointer: number[] = [];
-    const color: number[] = [];
-    // 斜面
-    for(let i = 0; i < resolution * 2; ++i) {
-      pointer.push(i);
-      pointer.push((i + 1) % (resolution * 2));
-      pointer.push((i + 2) % (resolution * 2));
-    }
-    for(let i = 0; i < resolution * 2; ++i) {
-      color.push(0.0, 1.0, 0.0, 1.0);
-    }
-    // 底面
-    for(let i = 0; i < resolution; ++i) {
-      pointer.push((2 * i + 1)  % (resolution * 2));
-      pointer.push(resolution * 2);
-      pointer.push((2 * (i + 1) + 1) % (resolution * 2));
-    }
-    for(let i = 0; i < resolution; ++i) {
-        color.push(1.0, 0.0, 0.0, 1.0);
-    } 
-    color.push(1.0, 0.0, 0.0, 1.0);
-
-    // 顶面
-    for(let i = 0; i < resolution; ++i) {
-      pointer.push((2 * i) % (resolution * 2));
-      pointer.push(resolution * 2 + 1);
-      pointer.push((2 * (i + 1)) % (resolution * 2));
-    }
-    for(let i = 0; i < resolution; ++i) {
-      color.push(0.0, 0.0, 1.0, 1.0);
-    } 
-    color.push(0.0, 0.0, 1.0, 1.0);
-
-    const positionBuffer = this.shader.createBuffer(new Float32Array(vertexs));
-    const colorBuffer = this.shader.createBuffer(new Float32Array(color));
-    const pointerBuffer = this.shader.createElementBuffer(new Uint16Array(pointer));
-
-    if(this.gl && positionBuffer && colorBuffer &&  this.vertexPositionLocation !== null && this.vertexColorLocation != null) {
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
-      this.draw.vertexAttribPointer({
-        vertexAttribute: this.vertexPositionLocation,
-        size: 3,
-        type: this.gl.FLOAT,
-        normalize: false,
-        stride: 0,
-        offset: 0
-      });                
-
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
-      this.draw.vertexAttribPointer({
-        vertexAttribute: this.vertexColorLocation,
-        size: 4,
-        type: this.gl.FLOAT,
-        normalize: false,
-        stride: 0,
-        offset: 0
-      });
-
-      this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, pointerBuffer);
-      this.draw.drawElements(this.gl.TRIANGLES, pointer.length, this.gl.UNSIGNED_SHORT, 0);
-    }
+    if(!this.shader || !this.drawer) return; 
+    const cylinder = new Cylinder(this.shader, this.drawer, this.vertexPositionLocation, this.vertexColorLocation);
+    cylinder.draw()
+    const animation = new Animation(new CylinderRenderer(this.drawer, Math.PI / 180 / 10, cylinder))
   }
 
   private initShader() {
     const  canvas = this.canvasRef.nativeElement;
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
-    this.gl = canvas.getContext("webgl");
-    if(this.gl) {
-        const shader = new Shader(this.gl, this.vsSource, this.fsSource);
+    const gl = canvas.getContext("webgl");
+    if(gl) {
+        const shader = new Shader(gl, this.vsSource, this.fsSource);
         return shader;
     } 
     else {
@@ -196,13 +124,18 @@ export class StarComponent implements OnInit,  AfterViewInit{
     }    
   }
 
-  private initDraw() {
-    if(!this.shader || !this.gl || !this.shader.shaderProgram) return null;
+  private initLocation() {
+    if(this.shader && this.shader.shaderProgram)  {
+      this.vertexPositionLocation = this.shader.gl.getAttribLocation(this.shader.shaderProgram, "aVertexPosition");
+      this.vertexColorLocation = this.shader.gl.getAttribLocation(this.shader.shaderProgram, "aVertexColor")
+    }
+  }
 
-    this.vertexPositionLocation = this.gl.getAttribLocation(this.shader.shaderProgram, "aVertexPosition");
-    this.vertexColorLocation = this.gl.getAttribLocation(this.shader.shaderProgram, "aVertexColor")
-    const projectionLocation = this.gl.getUniformLocation(this.shader.shaderProgram, "uProjectionMatrix");
-    const modelViewLocation = this.gl.getUniformLocation(this.shader.shaderProgram, "uModelViewMatrix");
+  private initDraw() {
+    if(!this.shader || !this.shader.gl || !this.shader.shaderProgram) return null;
+
+    const projectionLocation = this.shader.gl.getUniformLocation(this.shader.shaderProgram, "uProjectionMatrix");
+    const modelViewLocation = this.shader.gl.getUniformLocation(this.shader.shaderProgram, "uModelViewMatrix");
     if(projectionLocation && modelViewLocation) {
       const shaderInfo: ShaderInfo = {
         shaderProgram: this.shader.shaderProgram,
@@ -210,14 +143,14 @@ export class StarComponent implements OnInit,  AfterViewInit{
         modelViewLocation,
       }
       const canvas = this.canvasRef.nativeElement
-      const mvpInfo: MVPInfo = {
+      const projectionInfo: ProjectionInfo = {
         aspect: canvas.width / canvas.height,
         fov: 45,
         zNear: 0.1,
         zFar: 100
       };
-      const draw = new Draw(this.gl, mvpInfo, shaderInfo);
-      return draw;
+      const drawer = new Drawer(this.shader.gl, projectionInfo, shaderInfo, [0, 0, -10]);
+      return drawer;
     }
     else return null; 
   }

@@ -1,0 +1,82 @@
+:host {
+  width: 200px;
+  height: 100vh;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+}
+
+.menu-btn {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  cursor: pointer;
+  display: flex;
+  z-index: 99;
+
+  & > span {
+    display: block;
+    transition: all 0.2s linear;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    &.circle {
+      transform-style: preserve-3d;
+      width: 35px;
+      height: 35px;
+      border: 1px solid white;
+      border-radius: 100%;
+    }
+
+    &.dot {
+      width: 3px;
+      height: 3px;
+      background: white;
+    }
+  } 
+
+  &.active > span {
+    &.circle {
+      animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% {
+        transform: translate(-50%, -50%) rotateX(0deg);
+      }
+      50% {
+        transform: translate(-50%, -50%) rotateX(180deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) rotateZ(180deg);
+      }
+    }
+
+    &.dot {
+      width: 21px;
+      height: 1px;
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+  }
+}
+
+.straight-line {
+  margin: 0;
+  width: 2px;
+  height: 0vh;
+  left: 5%;
+  top: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    #dffff4 40%,
+    #c1ffea 60%,
+    #000 100%
+  );
+  transform: translate(-50%, -50%);
+}

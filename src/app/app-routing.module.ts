@@ -11,7 +11,8 @@ const routes: Routes = [
     { path: 'detail/:id', component: HeroDetailComponent },
     { path: "webgl", loadChildren: () => import("./routes/webgl/webgl.module").then(m => m.WebglModule)},
     { path: 'digital-clock-index', loadChildren: () => import("./routes/digital-clock/digital-clock.module").then(m => m.DigitalClockModule) },
-    { path: '', redirectTo: "webgl", pathMatch: 'full' },
+    { path: "ntp-desktop-index", loadChildren: () => import("./routes/ntp-desktop/ntp-desktop.module").then(m => m.NTPDesktopModule) },
+    { path: '', redirectTo: "ntp-desktop-index", pathMatch: 'full' },
     
 ]
 

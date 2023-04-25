@@ -96,3 +96,11 @@ text-align: center
  *display: inline;
  *zoom: 1;
 }
+
+button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
