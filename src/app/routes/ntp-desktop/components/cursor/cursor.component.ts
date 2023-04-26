@@ -1,5 +1,6 @@
 import { Component, HostBinding, Input, OnInit, ElementRef } from '@angular/core';
 import { BehaviorSubject, combineLatest } from "rxjs"
+import { gsap } from "gsap"
 @Component({
   selector: 'app-cursor',
   templateUrl: './cursor.component.html',
@@ -29,6 +30,10 @@ export class CursorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  explosion() {
+    
   }
 
 }

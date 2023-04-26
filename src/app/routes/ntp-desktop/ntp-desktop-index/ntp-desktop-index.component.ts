@@ -1,4 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { CursorComponent } from '../components/cursor/cursor.component';
 
 @Component({
   selector: 'app-ntp-desktop-index',
@@ -11,6 +12,9 @@ export class NtpDesktopIndexComponent implements OnInit {
     this.cursorPageX = event.pageX;
     this.cursorPageY = event.pageY;
   }
+  
+  @ViewChild(CursorComponent) cursorComponent: CursorComponent | null = null;
+
   cursorPageX = 0;
   cursorPageY = 0;
 
@@ -19,8 +23,9 @@ export class NtpDesktopIndexComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  handleMousemove() {
 
+  handleMenuItemClick() {
+    if(this.cursorComponent) this.cursorComponent.explosion()
   }
 
 }

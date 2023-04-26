@@ -3,6 +3,6 @@
   <span class="circle"></span>
 </button>
 <div class="menu-list" #menuListDom>
-  <a class="menu-item" href="#" *ngFor="let menu of menuList">{{ menu.title }}</a>
+  <a class="menu-item" *ngFor="let menu of menuList" (click)="handleMenuItemClick()">{{ menu.title }}</a>
 </div>
 <div class="straight-line" #straightLineDom></div>

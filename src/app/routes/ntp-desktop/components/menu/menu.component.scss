@@ -4,6 +4,7 @@
   right: 0;
   display: flex;
   justify-content: center;
+  align-items: center;
   position: absolute;
 }
 
@@ -79,4 +80,18 @@
     #000 100%
   );
   transform: translate(-50%, -50%);
+}
+
+.menu-list {
+  text-align: right;
+  display: none;
+
+  a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin: 25px 0;
+    font-size: 23px;
+    cursor: pointer;
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { BehaviorSubject, Subject, combineLatest } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { gsap } from 'gsap'
@@ -18,6 +18,8 @@ export class MenuComponent implements OnInit {
   set straightLine(elementRef: ElementRef<HTMLDivElement>) {
     this.straightLineRef$.next(elementRef);
   }
+
+  @Output('menu-item-click') menuItemClick = new EventEmitter<undefined>(); 
   menuList = [
     { title: "HOME"},
     { title: "ABOUT US"},
@@ -67,4 +69,7 @@ export class MenuComponent implements OnInit {
     this.menuBtnClickEvent$.next();
   }
 
+  handleMenuItemClick() {
+    this.menuItemClick.emit();
+  }
 }
