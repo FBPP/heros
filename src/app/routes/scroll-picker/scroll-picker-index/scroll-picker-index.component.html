@@ -1,0 +1,16 @@
+<div class="mask-top"></div>
+<div class="scroll-wrap" #scrollWrap
+>
+  <ul 
+    #scroll
+    [style.transfrom]="translateStyle"
+  >
+    <li 
+      *ngFor="let listItem of list$.value; index as i;" 
+      [style]="i | scrollItemStyle : itemAngle : rotateRadius$.value : currentIndex"
+      #scrollItem
+    >{{ listItem }}</li>
+  </ul>
+</div>
+<div class="mask-bottom"></div>
+
