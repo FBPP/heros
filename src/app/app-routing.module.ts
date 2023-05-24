@@ -13,7 +13,8 @@ const routes: Routes = [
     { path: 'digital-clock-index', loadChildren: () => import("./routes/digital-clock/digital-clock.module").then(m => m.DigitalClockModule) },
     { path: "ntp-desktop-index", loadChildren: () => import("./routes/ntp-desktop/ntp-desktop.module").then(m => m.NTPDesktopModule) },
     { path: 'scroll-picker', loadChildren: () => import('./routes/scroll-picker/scroll-picker.module').then(m => m.ScrollPickerModule) },
-    { path: '', redirectTo: "scroll-picker", pathMatch: 'full' },
+    { path: 'rxjs-exercise', loadChildren: () => import('./routes/rxjs-exercise/rxjs-exercise.module').then(m => m.RxjsExerciseModule) },
+    { path: '', redirectTo: "rxjs-exercise", pathMatch: 'full' },
     
 ]
 
