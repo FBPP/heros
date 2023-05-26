@@ -1,9 +1,11 @@
-<div>
-  <div class="box" #box
+<div
+  (mouseup)="handleBoxMouseUp()"
+  (mousemove)="handleBoxMouseMove($event)"
+  (mouseleave)="handleMouseLeave()"
+>
+  <div class="head box" #headBox
     (mousedown)="handleBoxMouseDown($event)"
-    (mousemove)="handleBoxMouseMove($event)"
-    (mouseup)="handleBoxMouseUp($event)"
   >
-
   </div>
+  <div class="box" *ngFor="let box of boxs" [style.backgroundColor]="box.backgroundColor" #box></div>
 </div>

@@ -1,7 +1,24 @@
+:host {
+  display: block;
+  height: 100vh;
+  width: 100%;
+}
 .box {
   position: absolute;
-  width: 100px;
-  height: 100px;
-  background-color: #000;
+  width: 50px;
+  height: 50px;
+  background-color: #eb0a0a;
   cursor: pointer;
+
+  &.shake {
+    animation: 0.3s shake infinite;
+  }
 }
+
+.head {
+  position: absolute;
+  z-index: 2;
+}
+
+
+

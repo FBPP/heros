@@ -14,7 +14,8 @@ const routes: Routes = [
     { path: "ntp-desktop-index", loadChildren: () => import("./routes/ntp-desktop/ntp-desktop.module").then(m => m.NTPDesktopModule) },
     { path: 'scroll-picker', loadChildren: () => import('./routes/scroll-picker/scroll-picker.module').then(m => m.ScrollPickerModule) },
     { path: 'rxjs-exercise', loadChildren: () => import('./routes/rxjs-exercise/rxjs-exercise.module').then(m => m.RxjsExerciseModule) },
-    { path: '', redirectTo: "rxjs-exercise", pathMatch: 'full' },
+    { path: 'music', loadChildren: () =>  import('./routes/music/music.module').then(m => m.MusicModule)},
+    { path: '', redirectTo: "music", pathMatch: 'full' },
     
 ]
 
