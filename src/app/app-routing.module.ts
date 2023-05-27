@@ -12,7 +12,10 @@ const routes: Routes = [
     { path: "webgl", loadChildren: () => import("./routes/webgl/webgl.module").then(m => m.WebglModule)},
     { path: 'digital-clock-index', loadChildren: () => import("./routes/digital-clock/digital-clock.module").then(m => m.DigitalClockModule) },
     { path: "ntp-desktop-index", loadChildren: () => import("./routes/ntp-desktop/ntp-desktop.module").then(m => m.NTPDesktopModule) },
-    { path: '', redirectTo: "ntp-desktop-index", pathMatch: 'full' },
+    { path: 'scroll-picker', loadChildren: () => import('./routes/scroll-picker/scroll-picker.module').then(m => m.ScrollPickerModule) },
+    { path: 'rxjs-exercise', loadChildren: () => import('./routes/rxjs-exercise/rxjs-exercise.module').then(m => m.RxjsExerciseModule) },
+    { path: 'music', loadChildren: () =>  import('./routes/music/music.module').then(m => m.MusicModule)},
+    { path: '', redirectTo: "music", pathMatch: 'full' },
     
 ]
 

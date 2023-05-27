@@ -1,0 +1,10 @@
+<div class="record">
+  <canvas #canvas></canvas>
+  <app-record-img></app-record-img>
+</div>
+<button *ngIf="currentPlayState.state == PlayState.PLAYING" (click)="handlePlayButtonClick()">
+{{ currentPlayState.text }}
+</button>
+<button *ngIf="currentPlayState.state == PlayState.PAUSE" (click)="handlePlayPauseClick()">
+  {{ currentPlayState.text }}
+</button>
