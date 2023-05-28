@@ -5,7 +5,7 @@ export class Partical {
   private timestamp: number | null = null;
   private x: number = 0;
   private y: number = 0;
-  private speed: number = 10;
+  private speed: number = 20;
   public isDied = false;
   private totalDist = 0;
 
@@ -17,9 +17,8 @@ export class Partical {
     private radius: number = 2,
   ) {
     this.x = this.startPosition.x;
-    this.y = this.endPosition.y;
+    this.y = this.startPosition.y;
     this.totalDist = Math.sqrt((endPosition.x - this.startPosition.x) ** 2 + (endPosition.y - this.startPosition.y) ** 2)
-    console.log(this.totalDist)
   }
 
   draw(color: string) {
@@ -35,6 +34,7 @@ export class Partical {
     } else {
       const timeDelta = timestamp - this.timestamp;
       let moveDist = timeDelta / 1000 * this.speed;
+      console.log(moveDist)
       if(moveDist > this.totalDist) {
         moveDist = this.totalDist;
         this.isDied = true;

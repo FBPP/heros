@@ -9,10 +9,9 @@ export class ParticalDrawer extends BaseDrawer {
     analyser.getByteFrequencyData(byteFrequenceData)
     const maxFrequence = this.findMaxFrequence(byteFrequenceData)
     this.ctx.clearRect(0, 0, this.width, this.height);
-    for(let i = 0; i < 360; i += 10) {
-      const value = this.linearInterpolation(byteFrequenceData[Math.round(i)], 0, maxFrequence, 1, 100);
-      console.log(value)
-      const direction = i / 360 * Math.PI * 2;
+    for(let i = 0; i < 360; i += 30) {
+      const value = this.linearInterpolation(byteFrequenceData[Math.round(i)], 0, maxFrequence, 1, 20);
+      const direction = i / 180 * Math.PI;
       const startPosition = {
         x: this.radius * Math.cos(direction) + this.center.x,
         y: this.radius * Math.sin(direction) + this.center.y,
@@ -31,7 +30,6 @@ export class ParticalDrawer extends BaseDrawer {
     }
     for(let i = 0; i < this.particals.length; ++i) {
       if(this.particals[i].isDied) {
-        console.log('xxxxx')
         this.particals.splice(i, 1);
       }
     }

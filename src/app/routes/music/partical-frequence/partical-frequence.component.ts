@@ -10,7 +10,7 @@ import { ParticalDrawer } from 'src/app/core/script/music/ParticalDrawer';
 export class ParticalFrequenceComponent extends BaseFrequency implements OnInit {
   constructor() {
     super();
-    this.throttleTime = 10000
+    this.throttleTime = 1000
   }
   ngOnInit(): void {
   }
