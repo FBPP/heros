@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from "@angular/router";
 import { HeroesComponent } from "./heroes/heroes.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -15,7 +14,8 @@ const routes: Routes = [
     { path: 'scroll-picker', loadChildren: () => import('./routes/scroll-picker/scroll-picker.module').then(m => m.ScrollPickerModule) },
     { path: 'rxjs-exercise', loadChildren: () => import('./routes/rxjs-exercise/rxjs-exercise.module').then(m => m.RxjsExerciseModule) },
     { path: 'music', loadChildren: () =>  import('./routes/music/music.module').then(m => m.MusicModule)},
-    { path: '', redirectTo: "music", pathMatch: 'full' },
+    { path: 'dancing-tree', loadChildren: () => import('./routes/dancing-tree/dancing-tree.module').then(m => m.DancingTreeModule)},
+    { path: '', redirectTo: "dancing-tree", pathMatch: 'full' },
     
 ]
 

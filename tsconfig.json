@@ -20,6 +20,9 @@
       "es2018",
       "dom"
     ],
+    "paths": {
+      "@core/*": ["src/app/core/*"],
+    },
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
