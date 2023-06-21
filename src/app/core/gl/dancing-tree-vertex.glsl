@@ -20,7 +20,7 @@ void main() {
     2.9 - 2.7 * radius + rand + 0.1 * (random - .5) * pow(angle, .25) * sin(2.0 * uTime),
     radius * sin(angle) + rand);
   vec3 myPosition = myOffset;
-  vec4 modelPosition = modelMatrix * vec4(myPosition, 1.0)
+  vec4 modelPosition = modelMatrix * vec4(myPosition, 1.0);
   vec4 viewPosition = viewMatrix * modelPosition;
   viewPosition.xyz += position * aScale * uSize;
   gl_Position = projectionMatrix * viewPosition;

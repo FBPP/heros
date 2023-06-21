@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { GlComponent } from './gl/gl.component';
 
 @Component({
   selector: 'app-dancing-tree',
@@ -6,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./dancing-tree.component.scss']
 })
 export class DancingTreeComponent {
-
+  @ViewChild(GlComponent) glComponent!: GlComponent;
+  handleMusicButtonClick(button: HTMLButtonElement) {
+    this.glComponent.playMusic(button);
+  }
 }

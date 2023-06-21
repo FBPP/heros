@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  height: 100vh;
+  background-color: #00101a;
+  font-family: fino-sans, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 700;
+  font-size: normal;
+}
+
+h1 {
+  position: absolute;
+  color: white;
+  top: 3rem;
+  left: 3rem;
+  right: 3rem;
+  text-align: center;
+  font-size: 3rem;
+}
+
+a {
+  color: inherit
+}
