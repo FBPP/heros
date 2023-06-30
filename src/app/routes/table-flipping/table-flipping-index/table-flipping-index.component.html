@@ -1,0 +1,46 @@
+<div class="container">
+  <header>
+    <h1>Teds</h1>
+    <ul>
+      <li>Latest</li>
+      <li>Brands</li>
+      <li>Collections</li>
+      <li class="active">Clearance</li>
+    </ul>
+  </header>
+  <section>
+    <h4>
+      Clearance
+      <span>Tables</span>
+    </h4>
+  </section>
+  <section>
+    <div class="card">
+      <div class="card-info">
+        <h1 id="card-info-title" #cardInfoTitle>{{ currentCard.title }}</h1>
+        <p id="card-info-desc" #cardInfoDesc>{{ currentCard.desc }}</p>
+        <button>
+          <p>More details</p>
+          <svg viewBox="0 0 20 10">
+            <line x1="0" y1="5" x2="20" y2="5"></line>
+            <line x1="15" y1="0" x2="20" y2="5"></line>
+            <line x1="15" y1="10" x2="20" y2="5"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="card-photo">
+        <div class="mask mask-1" #mask1></div>
+        <div class="mask mask-2" #mask2></div>
+        <button (click)="handleNextCardClick()">
+          <p>Next</p>
+          <svg viewBox="0 0 20 10">
+            <line x1="0" y1="5" x2="20" y2="5"></line>
+            <line x1="15" y1="0" x2="20" y2="5"></line>
+            <line x1="15" y1="10" x2="20" y2="5"></line>
+          </svg>
+        </button>
+        <img [src]="currentCard.photo" alt="">
+      </div>
+    </div>
+  </section>
+</div>

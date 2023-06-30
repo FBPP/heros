@@ -111,6 +111,7 @@ export class World {
   }
 
   addSpiral() {
+    // 创建spiral材质
     this.spiralMaterial = new THREE.ShaderMaterial({
       vertexShader: dancingTreeVertex,
       fragmentShader: dancingTreeFragment,
@@ -121,14 +122,13 @@ export class World {
       depthWrite: false,
       blending: THREE.AdditiveBlending
     })
-    const count = this.parameters.count;
-    const scales = new Float32Array(count * 1);
-    const colors = new Float32Array(count * 3);
-    const phis = new Float32Array(count);
-    const randoms = new Float32Array(count);
-    const randoms1 = new Float32Array(count);
-    const colorChoise = ["pink", "green", "cyan", "wheat", "red"];
 
+    const count = this.parameters.count;
+    const scales = new Float32Array(count * 1); // 缩放
+    const colors = new Float32Array(count * 3); // 颜色
+    const phis = new Float32Array(count); // 夹角
+    const randoms = new Float32Array(count); // 随机数
+    const colorChoise = ["pink", "green", "cyan", "wheat", "red"];
     const squareGeometry = new THREE.PlaneGeometry(1, 1);
     this.instancedGeometry = new THREE.InstancedBufferGeometry();
     Object.keys(squareGeometry.attributes).forEach(attr => {
@@ -136,7 +136,6 @@ export class World {
     })
     this.instancedGeometry.index = squareGeometry.index;
     this.instancedGeometry.instanceCount = count;
-
     for(let i = 0; i < count; ++i) {
       const i3 = 3 * i;
       const colorIndex = Math.floor(Math.random() * colorChoise.length);
@@ -148,12 +147,13 @@ export class World {
       colors[i3 + 1] = color.g;
       colors[i3 + 2] = color.b;
     }
-    this.instancedGeometry.setAttribute("phi", new THREE.InstancedBufferAttribute(phis, 1, false));
+
+    this.instancedGeometry.setAttribute('phi', new THREE.InstancedBufferAttribute(phis, 1, false));
     this.instancedGeometry.setAttribute('random', new THREE.InstancedBufferAttribute(randoms, 1, false));
     this.instancedGeometry.setAttribute('aScale', new THREE.InstancedBufferAttribute(scales, 1, false));
     this.instancedGeometry.setAttribute('aColor', new THREE.InstancedBufferAttribute(colors, 3, false));
     this.sprial = new THREE.Mesh(this.instancedGeometry, this.spiralMaterial);
-    this.scene.add(this.sprial)
+    this.scene.add(this.sprial);
   }
 
   addExternalSphere() {
@@ -229,7 +229,7 @@ export class World {
       const listener = new THREE.AudioListener();
       this.camera.add(listener);
       this.sound = new THREE.Audio(listener);
-      const audioLoader = new THREE.AudioLoader();
+      const audioLoader  = new THREE.AudioLoader();
       audioLoader.load(
         "https://assets.codepen.io/74321/short-snow_01.mp3",
         (buffer) => {
@@ -241,7 +241,7 @@ export class World {
           const data = this.analyser.getAverageFrequency();
           this.isRunning = true;
           this.t0 = this.time.elapsed;
-          observer.next(data)
+          observer.next(data);
         },
         (progress) => {
           gsap.to(playButton, {

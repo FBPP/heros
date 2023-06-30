@@ -1,0 +1,95 @@
+<div class="demo">
+  <div class="demo__top">
+    <svg class="demo__top-svgBg" viewBox="0 0 366 256">
+      <g class="svgBg__objects">
+        <path class="svgBg__bg svgBg__bg1" fill="#86D7DB" d="M 0, 143 88, 107 224, 153 348, 109 366, 123 366, 256 0, 256 z"></path>
+        <path class="svgBg__bg svgBg__bg2" fill="#3c929A" d="M 0, 156 106,136 272,172 342,124 366,144 366,256 0,256 z"></path>
+        <path class="svgBg__bg svgBg__bg3" fill="#416175" d="M 0, 170 62,160 235,148 305,145 366,153 366,256 0, 256 z"></path>
+        
+        <g class="svgBg__tree svgBg_tree-1 m-left" #tree1>
+          <path class="svgBg__tree-leafs svgBg__tree-part" fill="#389296" 
+            d="M 54,127 C 77,127 62,95 54,63 C 46,95 31,127 54,127"
+          ></path>
+          <path class="svgBg__tree-trunk svgBg__tree-part"
+            d="M 56,147 Q 55,115 54,83 Q 53, 115 52,146"
+          >
+          </path>
+        </g>
+        <g class="svgBg__tree svgBg_tree-2 m-left" #tree2>
+          <path class="svgBg__tree-leafs svgBg__tree-part" fill="#389296"
+            d="M 67,124 C 90,124 75,92 67,59 C 59,92 44,124 67,124"
+          ></path>
+          <path class="svgBg__tree-trunk svgBg__tree-trunk svgBg__tree-part" 
+            d="M 69,144 Q 68,112 67,80 Q66,112 65,143"
+          ></path>
+        </g>
+        <g class="svgBg__tree svgBg__tree-3 m-right" #tree3>
+          <path class="svgBg__tree-leafs svgBg__tree-part" fill="#389296"
+            d="M 264,129 C 287,129 272,97 264,64 C 256,97 241,129 264,129"
+          >
+          </path>
+          <path class="svgBg__tree-trunk svgBg__tree-part" d="M266, 149 Q 265,117 264,85 Q 263,117 262,148"></path>
+        </g>
+        <g class="svgBg__tree svgBg__tree-4 m-right" #tree4>
+          <path class="svgBg__tree-leafs svgBg__tree-part" fill="#207277"
+            d="M 287,128 C 310,128 295,96 287,63 C 279,96 264,128 287,128"
+          ></path>
+          <path class="svgBg__tree-trunc svgBg__tree-part" 
+            d="M 289,148 Q 288,116 287,84 Q 286,116 285,147"
+          ></path>
+        </g>
+        <g class="svgBg__tree svgBg__tree-5 m-right" #tree5>
+          <path class="svgBg__tree-leafs svgBg__tree-part" fill="#389296"
+            d="M 313,128 C 336,128 321,96 313,63 C 305,96 290,128 313,128"
+          ></path>
+          <path class="svgBg__tree-trunk svgBg__tree-part"
+            d="M 315,148 Q 314,116 313,84 Q 312,116 311,147"
+          ></path>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="demo__body">
+    <div class="plane-cont">
+      <div class="plane-rotater">
+        <div class="plane">
+          <svg class="plane-svg" viewBox="0 0 28 26">
+            <path class="plane-svg__path" fill="#fff" d="M 0,0 28,13, 0,26 0,13 20,13 0,7z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="pull-down">
+      <span class="text">Pull down</span></div>
+    <div class="items">
+      <div class="item item-3">
+        <a href="https://twitter.com/NikolayTalanov" target="_blank" class="icon-box item__icon">
+          <span class="icon-box__inner m--left">
+            <fa-icon [icon]="['fab', 'twitter']"></fa-icon>
+          </span>
+          <span class="icon-box__inner m--right">
+            <fa-icon [icon]="['fab', 'twitter']"></fa-icon>
+          </span>
+        </a>
+        <a href="https://twitter.com/NikolayTalanov" target="_blank" class="item__name">My Twitter</a>
+      </div>
+      <div class="item item-2">
+        <a href="https://codepen.io/suez/public/" target="_blank" class="icon-box item__icon">
+          <span class="icon-box__inner m--left">
+            <fa-icon [icon]="['fab', 'codepen']"></fa-icon>
+          </span>
+          <span class="icon-box__inner m--right">
+            <fa-icon [icon]="['fab', 'codepen']"></fa-icon>
+          </span>
+        </a>
+        <a href="https://codepen.io/suez/public/" target="_blank" class="item__name">My other demos</a>
+      </div>
+      <div class="item item-1">
+        <div class="item__icon m--img">
+          <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/142996/profile/profile-80_5.jpg" alt="">
+        </div>
+        <span class="item__name">Feed the cat!</span>
+      </div>
+    </div>
+  </div>
+</div>

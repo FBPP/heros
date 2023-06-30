@@ -15,7 +15,9 @@ const routes: Routes = [
     { path: 'rxjs-exercise', loadChildren: () => import('./routes/rxjs-exercise/rxjs-exercise.module').then(m => m.RxjsExerciseModule) },
     { path: 'music', loadChildren: () =>  import('./routes/music/music.module').then(m => m.MusicModule)},
     { path: 'dancing-tree', loadChildren: () => import('./routes/dancing-tree/dancing-tree.module').then(m => m.DancingTreeModule)},
-    { path: '', redirectTo: "dancing-tree", pathMatch: 'full' },
+    { path: 'table-flipping', loadChildren: () => import('./routes/table-flipping/table-flipping.module').then(m => m.TableFlippingModule)},
+    { path: 'pull-down-to-refresh', loadChildren: () => import('./routes/pull-down-to-refresh/pull-down-to-refresh.module').then(m => m.PullDownToRefreshModule)},
+    { path: '', redirectTo: "pull-down-to-refresh", pathMatch: 'full' },
     
 ]
 
